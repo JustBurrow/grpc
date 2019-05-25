@@ -1,6 +1,7 @@
 apply plugin: 'com.google.protobuf'
 
 dependencies {
+  compile 'com.google.protobuf:protobuf-java'
   compile 'io.grpc:grpc-protobuf'
   compile 'io.grpc:grpc-stub'
   compile 'io.grpc:grpc-protobuf'
@@ -11,45 +12,33 @@ dependencies {
 
 sourceSets {
   main {
-    proto {
-      srcDirs 'src/main/proto'
-    }
+//    proto {
+//      srcDir 'src/main/proto'
+//    }
 
     java {
-      srcDirs 'build/generated/src/proto/main/java'
+      srcDirs 'build/generated/source/proto/main/java'
+      srcDirs 'build/generated/source/proto/main/grpc'
     }
   }
 
-  test {
-    proto {
-      srcDir 'src/test/proto'
-    }
-  }
-}
-
-clean {
-  delete protobuf.generatedFilesBaseDir
+//  test {
+//    proto {
+//      srcDir 'src/test/proto'
+//    }
+//  }
 }
 
 protobuf {
   protoc {
-    artifact = 'com.google.protobuf:protoc'
+    artifact = "com.google.protobuf:protoc"
   }
 
   plugins {
-    grpc {
-      artifact = 'io.grpc:protoc-gen-grpc-java'
-    }
+    grpc { artifact = "io.grpc:protoc-gen-grpc-java" }
   }
 
   generateProtoTasks {
     all()*.plugins { grpc {} }
-  }
-}
-
-idea {
-  module {
-    sourceDirs += file("${protobuf.generatedFilesBaseDir}/main/java")
-    sourceDirs += file("${protobuf.generatedFilesBaseDir}/main/grpc")
   }
 }
