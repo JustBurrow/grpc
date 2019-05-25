@@ -12,21 +12,21 @@ dependencies {
 
 sourceSets {
   main {
-//    proto {
-//      srcDir 'src/main/proto'
-//    }
+    proto {
+      srcDir 'src/main/proto'
+    }
 
     java {
-      srcDirs 'build/generated/source/proto/main/java'
-      srcDirs 'build/generated/source/proto/main/grpc'
+      srcDir 'src/main/proto'
+      srcDir 'src/main/grpc'
     }
   }
 
-//  test {
-//    proto {
-//      srcDir 'src/test/proto'
-//    }
-//  }
+  test {
+    proto {
+      srcDir 'src/test/proto'
+    }
+  }
 }
 
 protobuf {
@@ -38,7 +38,10 @@ protobuf {
     grpc { artifact = "io.grpc:protoc-gen-grpc-java" }
   }
 
+  generatedFilesBaseDir = "$projectDir/src"
   generateProtoTasks {
-    all()*.plugins { grpc {} }
+    all()*.plugins {
+      grpc {}
+    }
   }
 }
