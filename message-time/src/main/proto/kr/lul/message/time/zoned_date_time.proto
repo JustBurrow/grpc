@@ -1,7 +1,9 @@
 syntax = "proto3";
 
-option java_package = "kr.lul.grpc.common.message.time";
+option java_package = "kr.lul.grpc.message.time";
 option java_outer_classname = "ZonedDateTimeProto";
+
+package kr.lul.message.time;
 
 message ZonedDateTime {
     string zone_id = 1;

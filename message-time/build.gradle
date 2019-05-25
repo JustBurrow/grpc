@@ -4,7 +4,6 @@ dependencies {
   compile 'com.google.protobuf:protobuf-java'
   compile 'io.grpc:grpc-protobuf'
   compile 'io.grpc:grpc-stub'
-  compile 'io.grpc:grpc-protobuf'
   if (JavaVersion.current().isJava9Compatible()) {
     compile 'javax.annotation:javax.annotation-api'
   }
@@ -17,8 +16,8 @@ sourceSets {
     }
 
     java {
-      srcDir 'src/main/proto'
-      srcDir 'src/main/grpc'
+      srcDir "${protobuf.generatedFilesBaseDir}/main/grpc"
+      srcDir "${protobuf.generatedFilesBaseDir}/main/java"
     }
   }
 
@@ -38,10 +37,19 @@ protobuf {
     grpc { artifact = "io.grpc:protoc-gen-grpc-java" }
   }
 
-  generatedFilesBaseDir = "$projectDir/src"
+  clean {
+    delete generatedFilesBaseDir
+  }
+
   generateProtoTasks {
     all()*.plugins {
       grpc {}
     }
+  }
+}
+
+idea {
+  module {
+    sourceDirs += file("${projectDir}/src/main/proto")
   }
 }

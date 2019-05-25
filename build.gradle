@@ -11,11 +11,13 @@ buildscript {
   }
 }
 
-apply plugin: 'idea'
-apply plugin: 'eclipse'
+allprojects {
+  apply plugin: 'idea'
+  apply plugin: 'eclipse'
 
-group 'kr.lul.grpc'
-version '0.0.1.SNAPSHOT'
+  group 'kr.lul.grpc'
+  version '0.0.1.SNAPSHOT'
+}
 
 subprojects {
   apply plugin: 'java'

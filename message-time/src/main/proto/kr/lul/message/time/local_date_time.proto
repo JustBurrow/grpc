@@ -1,7 +1,9 @@
 syntax = "proto3";
 
-option java_package = "kr.lul.grpc.common.message.time";
+option java_package = "kr.lul.grpc.message.time";
 option java_outer_classname = "LocalDateTimeProto";
+
+package kr.lul.message.time;
 
 message LocalDateTime {
     int32 year = 1;
