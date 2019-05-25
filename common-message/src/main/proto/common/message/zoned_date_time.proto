@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+option java_package = "kr.lul.grpc.common.message.time";
+option java_outer_classname = "ZonedDateTimeProto";
+
+message ZonedDateTime {
+    string zone_id = 1;
+    int64 seconds = 2;
+    int64 nanos = 3;
+}
