@@ -9,6 +9,7 @@ import "kr/lul/message/time/local_date.proto";
 import "kr/lul/message/time/local_date_time.proto";
 import "kr/lul/message/time/local_time.proto";
 import "kr/lul/message/time/offset_date_time.proto";
+import "kr/lul/message/time/offset_time.proto";
 import "kr/lul/message/time/zoned_date_time.proto";
 
 import "google/protobuf/timestamp.proto";
@@ -20,6 +21,7 @@ message Temporal {
         LocalDateTime local_date_time = 3;
         LocalTime local_time = 4;
         OffsetDateTime offset_date_time = 5;
-        ZonedDateTime zoned_date_time = 6;
+        OffsetTime offset_time = 6;
+        ZonedDateTime zoned_date_time = 7;
     }
 }

@@ -1,0 +1,7 @@
+dependencies {
+  implementation project(':message-time')
+  
+  api 'com.google.protobuf:protobuf-java'
+  api 'com.google.protobuf:protobuf-java-util'
+  api 'io.grpc:grpc-protobuf'
+}

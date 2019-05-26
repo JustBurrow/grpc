@@ -1,11 +1,9 @@
 syntax = "proto3";
 
 option java_package = "kr.lul.grpc.message.time";
-option java_outer_classname = "LocalTimeProto";
+option java_outer_classname = "OffsetTimeProto";
 
-package kr.lul.message.time;
-
-message LocalTime {
+message OffsetTime {
     /*
      * Hour of day, from 0 to 23.
      */
@@ -22,4 +20,8 @@ message LocalTime {
      * Nano second of second, from 0 to 999_999_999.
      */
     int32 nano = 4;
+    /**
+     * Offset seconds.
+     */
+    int32 offset = 5;
 }

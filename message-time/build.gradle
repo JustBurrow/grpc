@@ -4,8 +4,9 @@ dependencies {
   compile 'com.google.protobuf:protobuf-java'
   compile 'io.grpc:grpc-protobuf'
   compile 'io.grpc:grpc-stub'
+
   if (JavaVersion.current().isJava9Compatible()) {
-    compile 'javax.annotation:javax.annotation-api'
+    compileOnly 'javax.annotation:javax.annotation-api'
   }
 }
 
