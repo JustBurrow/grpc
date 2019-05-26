@@ -83,6 +83,7 @@ public interface TemporalMessageBuilder extends MessageBuilder {
     } else if (temporal instanceof LocalDateTime) {
       message = (M) LocalDateTimeProto.LocalDateTime.newBuilder()
           .setYear(((LocalDateTime) temporal).getYear())
+          .setMonth(((LocalDateTime) temporal).getMonthValue())
           .setDate(((LocalDateTime) temporal).getDayOfMonth())
           .setHour(((LocalDateTime) temporal).getHour())
           .setMinute(((LocalDateTime) temporal).getMinute())
