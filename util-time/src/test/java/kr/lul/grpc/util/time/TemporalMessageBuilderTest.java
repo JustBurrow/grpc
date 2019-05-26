@@ -1,9 +1,7 @@
 package kr.lul.grpc.util.time;
 
 import com.google.protobuf.Timestamp;
-import kr.lul.grpc.message.time.OffsetDateTimeProto;
-import kr.lul.grpc.message.time.OffsetTimeProto;
-import kr.lul.grpc.message.time.ZonedDateTimeProto;
+import kr.lul.grpc.message.time.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -21,23 +19,23 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class TemporalMessageBuilderTest {
   private static final Logger log = getLogger(TemporalMessageBuilderTest.class);
 
-  private TemporalMessageBuilder generator;
+  private TemporalMessageBuilder builder;
 
   @Before
   public void setUp() throws Exception {
-    this.generator = new TemporalMessageBuilder() {
+    this.builder = new TemporalMessageBuilder() {
     };
   }
 
   @Test
   public void test_supportsSourceTypes() throws Exception {
-    assertThat(this.generator.supportsSourceTypes())
+    assertThat(this.builder.supportsSourceTypes())
         .isNotEmpty();
   }
 
   @Test
   public void test_build_with_null() throws Exception {
-    assertThatThrownBy(() -> this.generator.build(null))
+    assertThatThrownBy(() -> this.builder.build(null))
         .isInstanceOf(NullPointerException.class)
         .hasMessage("temporal is null.");
   }
@@ -49,7 +47,7 @@ public class TemporalMessageBuilderTest {
     log.info("GIVEN - instant={}, seconds={}, nanos={}", instant, instant.getEpochSecond(), instant.getNano());
 
     // When
-    Timestamp message = this.generator.build(instant);
+    Timestamp message = this.builder.build(instant);
     log.info("WHEN - message={}", message);
 
     // Then
@@ -67,7 +65,7 @@ public class TemporalMessageBuilderTest {
         zonedDateTime.getZone(), zonedDateTime.toEpochSecond(), zonedDateTime.getNano());
 
     // When
-    ZonedDateTimeProto.ZonedDateTime message = this.generator.build(zonedDateTime);
+    ZonedDateTimeProto.ZonedDateTime message = this.builder.build(zonedDateTime);
     log.info("WHEN - message={}", message);
 
     // Then
@@ -87,7 +85,7 @@ public class TemporalMessageBuilderTest {
         offsetDateTime.getOffset().getTotalSeconds(), offsetDateTime.toEpochSecond(), offsetDateTime.getNano());
 
     // When
-    OffsetDateTimeProto.OffsetDateTime message = this.generator.build(offsetDateTime);
+    OffsetDateTimeProto.OffsetDateTime message = this.builder.build(offsetDateTime);
     log.info("WHEN - message={}", message);
 
     // Then
@@ -106,7 +104,7 @@ public class TemporalMessageBuilderTest {
     log.info("GIVEN - offsetTime={}, offset={}", offsetTime, offsetTime.getOffset());
 
     // When
-    OffsetTimeProto.OffsetTime message = this.generator.build(offsetTime);
+    OffsetTimeProto.OffsetTime message = this.builder.build(offsetTime);
     log.info("WHEN - message={}", message);
 
     // Then
@@ -121,13 +119,69 @@ public class TemporalMessageBuilderTest {
   }
 
   @Test
+  public void test_build_with_LocalDate() throws Exception {
+    // Given
+    LocalDate localDate = LocalDate.now();
+    log.info("GIVEN - localDate={}", localDate);
+
+    // When
+    LocalDateProto.LocalDate message = this.builder.build(localDate);
+    log.info("WHEN - message={}", message);
+
+    // Then
+    assertThat(message)
+        .isNotNull()
+        .extracting(LocalDateProto.LocalDate::getYear, LocalDateProto.LocalDate::getMonth,
+            LocalDateProto.LocalDate::getDate)
+        .containsSequence(localDate.getYear(), localDate.getMonthValue(), localDate.getDayOfMonth());
+  }
+
+  @Test
+  public void test_build_with_LocalDateTime() throws Exception {
+    // Given
+    LocalDateTime localDateTime = LocalDateTime.now();
+    log.info("GIVEN - localDateTime={}", localDateTime);
+
+    // When
+    LocalDateTimeProto.LocalDateTime message = this.builder.build(localDateTime);
+    log.info("WHEN - message={}", message);
+
+    // Then
+    assertThat(message)
+        .isNotNull()
+        .extracting(LocalDateTimeProto.LocalDateTime::getHour, LocalDateTimeProto.LocalDateTime::getMinute,
+            LocalDateTimeProto.LocalDateTime::getSecond, LocalDateTimeProto.LocalDateTime::getNano)
+        .containsSequence(localDateTime.getHour(), localDateTime.getMinute(),
+            localDateTime.getSecond(), localDateTime.getNano());
+  }
+
+  @Test
+  public void test_build_with_LocalTime() throws Exception {
+    // Given
+    LocalTime localTime = LocalTime.now();
+    log.info("GIVEN - localTime={}", localTime);
+
+    // When
+    LocalTimeProto.LocalTime message = this.builder.build(localTime);
+    log.info("WHEN - message={}", message);
+
+    // Then
+    assertThat(message)
+        .isNotNull()
+        .extracting(LocalTimeProto.LocalTime::getHour, LocalTimeProto.LocalTime::getMinute,
+            LocalTimeProto.LocalTime::getSecond, LocalTimeProto.LocalTime::getNano)
+        .containsSequence(localTime.getHour(), localTime.getMinute(),
+            localTime.getSecond(), localTime.getNano());
+  }
+
+  @Test
   public void test_build_with_Year() throws Exception {
     // Given
     Year year = Year.now();
     log.info("GIVEN - year={}", year);
 
     // Then
-    assertThatThrownBy(() -> this.generator.build(year))
+    assertThatThrownBy(() -> this.builder.build(year))
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessageStartingWith("unsupported temporal type")
         .hasMessageContaining(Year.class.getName());
