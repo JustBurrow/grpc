@@ -1,8 +1,12 @@
 apply plugin: 'com.google.protobuf'
 
 dependencies {
-  compile 'com.google.protobuf:protobuf-java'
-  compile 'io.grpc:grpc-protobuf'
+  protobuf project(':message-time')
+  implementation project(':util-time')
+
+  implementation 'io.grpc:grpc-stub'
+  implementation 'io.grpc:grpc-netty'
+  implementation 'io.github.lognet:grpc-spring-boot-starter'
 
   if (JavaVersion.current().isJava9Compatible()) {
     compileOnly 'javax.annotation:javax.annotation-api'
