@@ -23,7 +23,9 @@ public interface TemporalMessageParser extends MessageParser {
       Timestamp.class,
       ZonedDateTimeProto.ZonedDateTime.class, OffsetDateTimeProto.OffsetDateTime.class,
       OffsetTimeProto.OffsetTime.class,
-      LocalDateProto.LocalDate.class, LocalDateTimeProto.LocalDateTime.class, LocalTimeProto.LocalTime.class
+      LocalDateProto.LocalDate.class, LocalDateTimeProto.LocalDateTime.class, LocalTimeProto.LocalTime.class,
+
+      TemporalProto.Temporal.class
   )));
 
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -86,14 +88,37 @@ public interface TemporalMessageParser extends MessageParser {
           ((LocalTimeProto.LocalTime) message).getMinute(),
           ((LocalTimeProto.LocalTime) message).getSecond(),
           ((LocalTimeProto.LocalTime) message).getNano());
-    }
-    //
-    else {
+    } else if (message instanceof TemporalProto.Temporal) {
+      switch (((TemporalProto.Temporal) message).getTemporalCase()) {
+        case TIMESTAMP:
+          temporal = parse(((TemporalProto.Temporal) message).getTimestamp());
+          break;
+        case ZONED_DATE_TIME:
+          temporal = parse(((TemporalProto.Temporal) message).getZonedDateTime());
+          break;
+        case OFFSET_DATE_TIME:
+          temporal = parse(((TemporalProto.Temporal) message).getOffsetDateTime());
+          break;
+        case OFFSET_TIME:
+          temporal = parse(((TemporalProto.Temporal) message).getOffsetTime());
+          break;
+        case LOCAL_DATE:
+          temporal = parse(((TemporalProto.Temporal) message).getLocalDate());
+          break;
+        case LOCAL_DATE_TIME:
+          temporal = parse(((TemporalProto.Temporal) message).getLocalDateTime());
+          break;
+        case LOCAL_TIME:
+          temporal = parse(((TemporalProto.Temporal) message).getLocalTime());
+          break;
+        default:
+          throw new IllegalArgumentException(format("unsupported temporal case : temporal=%s", message));
+      }
+    } else {
       throw new IllegalStateException(
           format("illegal supports temporal message type configuration : message=%s, supports=%s",
               message.getClass(), TEMPORAL_TYPES));
     }
-
 
     return temporal;
   }

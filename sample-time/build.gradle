@@ -11,6 +11,8 @@ dependencies {
   if (JavaVersion.current().isJava9Compatible()) {
     compileOnly 'javax.annotation:javax.annotation-api'
   }
+
+  testImplementation 'io.grpc:grpc-testing'
 }
 
 sourceSets {

@@ -176,4 +176,156 @@ public class TemporalMessageParserTest {
         .isNotSameAs(expected)
         .isEqualTo(expected);
   }
+
+  @Test
+  public void test_parse_with_temporal_timestamp() throws Exception {
+    // Given
+    Instant expected = Instant.now();
+    log.info("GIVEN - expected={}", expected);
+
+    TemporalProto.Temporal message = TemporalProto.Temporal.newBuilder()
+        .setTimestamp((Timestamp) this.builder.build(expected))
+        .build();
+    log.info("GIVEN - message={}", message);
+
+    // When
+    Instant actual = this.parser.parse(message);
+    log.info("WHEN - actual={}", actual);
+
+    // Then
+    assertThat(actual)
+        .isNotNull()
+        .isNotSameAs(expected)
+        .isEqualTo(expected);
+  }
+
+  @Test
+  public void test_parse_with_temporal_ZonedDateTime() throws Exception {
+    // Given
+    ZonedDateTime expected = ZonedDateTime.now();
+    log.info("GIVEN - expected={}", expected);
+
+    TemporalProto.Temporal message = TemporalProto.Temporal.newBuilder()
+        .setZonedDateTime((ZonedDateTimeProto.ZonedDateTime) this.builder.build(expected))
+        .build();
+    log.info("GIVEN - message={}", message);
+
+    // When
+    ZonedDateTime actual = this.parser.parse(message);
+    log.info("WHEN - actual={}", actual);
+
+    // Then
+    assertThat(actual)
+        .isNotNull()
+        .isNotSameAs(expected)
+        .isEqualTo(expected);
+  }
+
+  @Test
+  public void test_parse_with_temporal_OffsetDateTime() throws Exception {
+    // Given
+    OffsetDateTime expected = OffsetDateTime.now();
+    log.info("GIVEN - expected={}", expected);
+
+    TemporalProto.Temporal message = TemporalProto.Temporal.newBuilder()
+        .setOffsetDateTime((OffsetDateTimeProto.OffsetDateTime) this.builder.build(expected))
+        .build();
+    log.info("GIVEN - message={}", message);
+
+    // When
+    OffsetDateTime actual = this.parser.parse(message);
+    log.info("WHEN - actual={}", actual);
+
+    // Then
+    assertThat(actual)
+        .isNotSameAs(expected)
+        .isEqualTo(expected);
+  }
+
+  @Test
+  public void test_parse_with_temporal_OffsetTime() throws Exception {
+    // Given
+    OffsetTime expected = OffsetTime.now();
+    log.info("GIVEN - expected={}", expected);
+
+    TemporalProto.Temporal message = TemporalProto.Temporal.newBuilder()
+        .setOffsetTime((OffsetTimeProto.OffsetTime) this.builder.build(expected))
+        .build();
+    log.info("GIVEN - message={}", message);
+
+    // When
+    OffsetTime actual = this.parser.parse(message);
+    log.info("WHEN - actual={}", actual);
+
+    // Then
+    assertThat(actual)
+        .isNotSameAs(expected)
+        .isEqualTo(expected);
+  }
+
+  @Test
+  public void test_parse_with_temporal_LocalDate() throws Exception {
+    // Given
+    LocalDate expected = LocalDate.now();
+    log.info("GIVEN - expected={}", expected);
+
+    TemporalProto.Temporal message = TemporalProto.Temporal.newBuilder()
+        .setLocalDate((LocalDateProto.LocalDate) this.builder.build(expected))
+        .build();
+    log.info("GIVEN - message={}", message);
+
+    // When
+    LocalDate actual = this.parser.parse(message);
+    log.info("WHEN - actual={}", actual);
+
+    // Then
+    assertThat(actual)
+        .isNotNull()
+        .isNotSameAs(expected)
+        .isEqualTo(expected);
+  }
+
+  @Test
+  public void test_parse_with_temporal_LocalDateTime() throws Exception {
+    // Given
+    LocalDateTime expected = LocalDateTime.now();
+    log.info("GIVEN - expected={}", expected);
+
+    TemporalProto.Temporal message = TemporalProto.Temporal.newBuilder()
+        .setLocalDateTime((LocalDateTimeProto.LocalDateTime) this.builder.build(expected))
+        .build();
+    log.info("GIVEN - message={}", message);
+
+    // When
+    LocalDateTime actual = this.parser.parse(message);
+    log.info("WHEN - actual={}", actual);
+
+    // Then
+    assertThat(actual)
+        .isNotNull()
+        .isNotSameAs(expected)
+        .isEqualTo(expected);
+  }
+
+  @Test
+  public void test_parse_with_temporal_LocalTime() throws Exception {
+    // Given
+    LocalTime expected = LocalTime.now();
+    log.info("GIVEN - expected={}", expected);
+
+    TemporalProto.Temporal message = TemporalProto.Temporal.newBuilder()
+        .setLocalTime((LocalTimeProto.LocalTime) this.builder.build(expected))
+        .build();
+    log.info("GIVEN - message={}", message);
+
+    // When
+    LocalTime actual = this.parser.parse(message);
+    log.info("WHEN - actual={}", actual);
+
+    // Then
+    assertThat(actual)
+        .isNotNull()
+        .isNotSameAs(expected)
+        .isEqualTo(expected);
+  }
 }
