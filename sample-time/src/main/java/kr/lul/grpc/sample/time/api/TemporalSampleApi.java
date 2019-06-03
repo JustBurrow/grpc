@@ -5,7 +5,7 @@ import io.grpc.stub.StreamObserver;
 import kr.lul.grpc.message.time.*;
 import kr.lul.grpc.sample.time.PingRequest;
 import kr.lul.grpc.sample.time.PingResponse;
-import kr.lul.grpc.sample.time.PingServiceGrpc;
+import kr.lul.grpc.sample.time.TemporalSampleServiceGrpc;
 import kr.lul.grpc.util.time.TemporalMessageBuilder;
 import kr.lul.grpc.util.time.TemporalMessageBuilderImpl;
 import org.lognet.springboot.grpc.GRpcService;
@@ -22,8 +22,8 @@ import static org.slf4j.LoggerFactory.getLogger;
  * @since 2019-05-28
  */
 @GRpcService
-public class PingServiceApi extends PingServiceGrpc.PingServiceImplBase {
-  private static final Logger log = getLogger(PingServiceApi.class);
+public class TemporalSampleApi extends TemporalSampleServiceGrpc.TemporalSampleServiceImplBase {
+  private static final Logger log = getLogger(TemporalSampleApi.class);
 
   private TemporalMessageBuilder builder;
 
@@ -35,7 +35,7 @@ public class PingServiceApi extends PingServiceGrpc.PingServiceImplBase {
   }
 
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  // kr.lul.grpc.sample.time.PingServiceGrpc.PingServiceImplBase
+  // kr.lul.grpc.sample.time.TimeServiceGrpc.TimeServiceImplBase
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   @Override
   public void ping(PingRequest request, StreamObserver<PingResponse> responseObserver) {

@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 option java_package = "kr.lul.grpc.sample.time";
-option java_outer_classname = "PingServiceProto";
+option java_outer_classname = "TemporalSampleServiceProto";
 option java_multiple_files = true;
 
 package kr.lul.message.time;
@@ -17,7 +17,7 @@ message PingResponse {
     Temporal received_at = 2;
 }
 
-service PingService {
+service TemporalSampleService {
     /**
      * 받은 시각 정보를 반환한다.
      */

@@ -6,8 +6,8 @@ import io.grpc.inprocess.InProcessChannelBuilder;
 import kr.lul.grpc.message.time.*;
 import kr.lul.grpc.sample.time.PingRequest;
 import kr.lul.grpc.sample.time.PingResponse;
-import kr.lul.grpc.sample.time.PingServiceGrpc;
 import kr.lul.grpc.sample.time.SampleTimeTestConfiguration;
+import kr.lul.grpc.sample.time.TemporalSampleServiceGrpc;
 import kr.lul.grpc.util.time.TemporalMessageBuilder;
 import kr.lul.grpc.util.time.TemporalMessageBuilderImpl;
 import kr.lul.grpc.util.time.TemporalMessageParser;
@@ -33,14 +33,14 @@ import static org.slf4j.LoggerFactory.getLogger;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = SampleTimeTestConfiguration.class)
-public class PingServiceApiTest {
-  private static final Logger log = getLogger(PingServiceApiTest.class);
+public class TemporalSampleApiTest {
+  private static final Logger log = getLogger(TemporalSampleApiTest.class);
 
   @Value("${grpc.inProcessServerName}")
   private String inProcessServerName;
 
   private ManagedChannel channel;
-  private PingServiceGrpc.PingServiceBlockingStub stub;
+  private TemporalSampleServiceGrpc.TemporalSampleServiceBlockingStub stub;
 
   private TemporalMessageBuilder builder = new TemporalMessageBuilderImpl();
   private TemporalMessageParser parser = new TemporalMessageParserImpl();
@@ -52,7 +52,7 @@ public class PingServiceApiTest {
         .build();
     log.info("SETUP - channel={}", this.channel);
 
-    this.stub = PingServiceGrpc.newBlockingStub(this.channel);
+    this.stub = TemporalSampleServiceGrpc.newBlockingStub(this.channel);
     log.info("SETUP - stub={}", this.stub);
   }
 
