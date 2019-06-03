@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option java_package = "kr.lul.grpc.sample.time";
+option java_package = "kr.lul.grpc.sample.time.rpc";
 option java_outer_classname = "TemporalSampleServiceProto";
 option java_multiple_files = true;
 
