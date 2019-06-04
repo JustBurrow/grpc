@@ -13,14 +13,13 @@ import kr.lul.grpc.util.time.TemporalMessageBuilder;
 import kr.lul.grpc.util.time.TemporalMessageBuilderImpl;
 import kr.lul.grpc.util.time.TemporalMessageParser;
 import kr.lul.grpc.util.time.TemporalMessageParserImpl;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.ClassRule;
 import org.junit.Test;
 import org.slf4j.Logger;
 
 import java.time.*;
-import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.slf4j.LoggerFactory.getLogger;
@@ -32,38 +31,37 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class TemporalSampleApiTest {
   private static final Logger log = getLogger(TemporalSampleApiTest.class);
 
-  @Rule
-  public GrpcCleanupRule grpcCleanupRule = new GrpcCleanupRule();
+  @ClassRule
+  public static GrpcCleanupRule GRPC_CLEANUP = new GrpcCleanupRule();
+
+  private static Server SERVER;
+  private static TemporalSampleServiceGrpc.TemporalSampleServiceBlockingStub STUB;
 
   private TemporalMessageBuilder builder = new TemporalMessageBuilderImpl();
   private TemporalMessageParser parser = new TemporalMessageParserImpl();
 
-  private String serverName;
-  private Server server;
-  private TemporalSampleServiceGrpc.TemporalSampleServiceBlockingStub stub;
-
-  @Before
-  public void setUp() throws Exception {
+  @BeforeClass
+  public static void setUpBeforeClass() throws Exception {
     TemporalSampleApi temporalSampleApi = new TemporalSampleApi();
     temporalSampleApi.postConstruct();
 
-    this.serverName = InProcessServerBuilder.generateName();
-    this.server = InProcessServerBuilder.forName(this.serverName)
+    String serverName = InProcessServerBuilder.generateName();
+    SERVER = InProcessServerBuilder.forName(serverName)
         .directExecutor()
         .addService(temporalSampleApi)
         .build()
         .start();
-    this.grpcCleanupRule.register(this.server);
+    GRPC_CLEANUP.register(SERVER);
 
-    this.stub = TemporalSampleServiceGrpc.newBlockingStub(
-        InProcessChannelBuilder.forName(this.serverName).directExecutor().build());
-    log.info("SETUP - stub={}", this.stub);
+    STUB = TemporalSampleServiceGrpc.newBlockingStub(
+        InProcessChannelBuilder.forName(serverName).directExecutor().build());
+    log.info("SETUP - STUB={}", STUB);
   }
 
-  @After
-  public void tearDown() throws Exception {
-    this.server.shutdown();
-    this.server.awaitTermination(5L, TimeUnit.SECONDS);
+  @AfterClass
+  public static void tearDownAfterClass() throws Exception {
+    SERVER.shutdown();
+    SERVER.awaitTermination();
   }
 
   @Test
@@ -81,7 +79,7 @@ public class TemporalSampleApiTest {
     log.info("GIVEN - request={}", request);
 
     // When
-    PingResponse response = this.stub.ping(request);
+    PingResponse response = this.STUB.ping(request);
     log.info("WHEN - response={}", response);
 
     // Then
@@ -111,7 +109,7 @@ public class TemporalSampleApiTest {
     log.info("GIVEN - request={}", request);
 
     // When
-    PingResponse response = this.stub.ping(request);
+    PingResponse response = this.STUB.ping(request);
     log.info("WHEN - response={}", response);
 
     // Then
@@ -140,7 +138,7 @@ public class TemporalSampleApiTest {
     log.info("GIVEN - request={}", request);
 
     // When
-    PingResponse response = this.stub.ping(request);
+    PingResponse response = this.STUB.ping(request);
     log.info("WHEN - response={}", response);
 
     // Then
@@ -168,7 +166,7 @@ public class TemporalSampleApiTest {
     log.info("GIVEN - request={}", request);
 
     // When
-    PingResponse response = this.stub.ping(request);
+    PingResponse response = this.STUB.ping(request);
     log.info("WHEN - response={}", response);
 
     // Then
@@ -196,7 +194,7 @@ public class TemporalSampleApiTest {
     log.info("GIVEN - request={}", request);
 
     // When
-    PingResponse response = this.stub.ping(request);
+    PingResponse response = this.STUB.ping(request);
     log.info("WHEN - response={}", response);
 
     // Then
@@ -224,7 +222,7 @@ public class TemporalSampleApiTest {
     log.info("GIVEN - request={}", request);
 
     // When
-    PingResponse response = this.stub.ping(request);
+    PingResponse response = this.STUB.ping(request);
     log.info("WHEN - response={}", response);
 
     // Then

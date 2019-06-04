@@ -13,9 +13,9 @@ import kr.lul.grpc.util.time.TemporalAmountMessageParser;
 import kr.lul.grpc.util.time.TemporalAmountMessageParserImpl;
 import kr.lul.grpc.util.time.TemporalMessageBuilder;
 import kr.lul.grpc.util.time.TemporalMessageBuilderImpl;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.ClassRule;
 import org.junit.Test;
 import org.slf4j.Logger;
 
@@ -32,38 +32,37 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class TemporalAmountSampleApiTest {
   private static final Logger log = getLogger(TemporalAmountSampleApiTest.class);
 
-  @Rule
-  public GrpcCleanupRule grpcCleanup = new GrpcCleanupRule();
+  @ClassRule
+  public static GrpcCleanupRule GRPC_CLEANUP = new GrpcCleanupRule();
+
+  private static Server SERVER;
+  private static TemporalAmountSampleServiceGrpc.TemporalAmountSampleServiceBlockingStub STUB;
 
   private TemporalMessageBuilder builder = new TemporalMessageBuilderImpl();
   private TemporalAmountMessageParser parser = new TemporalAmountMessageParserImpl();
 
-  private String serverName;
-  private Server server;
-  private TemporalAmountSampleServiceGrpc.TemporalAmountSampleServiceBlockingStub stub;
-
-  @Before
-  public void setUp() throws Exception {
+  @BeforeClass
+  public static void setUpBeforeClass() throws Exception {
     TemporalAmountSampleApi temporalAmountSampleApi = new TemporalAmountSampleApi();
     temporalAmountSampleApi.postConstruct();
 
-    this.serverName = InProcessServerBuilder.generateName();
-    this.server = InProcessServerBuilder.forName(this.serverName)
+    String serverName = InProcessServerBuilder.generateName();
+    SERVER = InProcessServerBuilder.forName(serverName)
         .directExecutor()
         .addService(temporalAmountSampleApi)
         .build()
         .start();
-    this.grpcCleanup.register(this.server);
+    GRPC_CLEANUP.register(SERVER);
 
-    this.stub = TemporalAmountSampleServiceGrpc.newBlockingStub(
-        this.grpcCleanup.register(InProcessChannelBuilder.forName(this.serverName).directExecutor().build()));
-    log.info("SETUP - stub={}", this.stub);
+    STUB = TemporalAmountSampleServiceGrpc.newBlockingStub(
+        GRPC_CLEANUP.register(InProcessChannelBuilder.forName(serverName).directExecutor().build()));
+    log.info("SETUP CLASS - STUB={}", STUB);
   }
 
-  @After
-  public void tearDown() throws Exception {
-    this.server.shutdown();
-    this.server.awaitTermination();
+  @AfterClass
+  public static void tearDownAfterClass() throws Exception {
+    SERVER.shutdown();
+    SERVER.awaitTermination();
   }
 
   @Test
@@ -84,7 +83,7 @@ public class TemporalAmountSampleApiTest {
     log.info("GIVEN - request={}", request);
 
     // When
-    TemporalAmountResponse response = this.stub.calc(request);
+    TemporalAmountResponse response = this.STUB.calc(request);
     log.info("WHEN - response={}", response);
 
     // Then
