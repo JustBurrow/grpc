@@ -8,7 +8,6 @@ import kr.lul.grpc.sample.time.rpc.PingResponse;
 import kr.lul.grpc.sample.time.rpc.TemporalSampleServiceGrpc;
 import kr.lul.grpc.util.time.TemporalMessageBuilder;
 import kr.lul.grpc.util.time.TemporalMessageBuilderImpl;
-import org.lognet.springboot.grpc.GRpcService;
 import org.slf4j.Logger;
 
 import javax.annotation.PostConstruct;
@@ -21,14 +20,13 @@ import static org.slf4j.LoggerFactory.getLogger;
  * @author justburrow
  * @since 2019-05-28
  */
-@GRpcService
 public class TemporalSampleApi extends TemporalSampleServiceGrpc.TemporalSampleServiceImplBase {
   private static final Logger log = getLogger(TemporalSampleApi.class);
 
   private TemporalMessageBuilder builder;
 
   @PostConstruct
-  private void postConstruct() {
+  public void postConstruct() {
     this.builder = new TemporalMessageBuilderImpl();
 
     log.info("init complete : {}", this);

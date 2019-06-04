@@ -1,10 +1,11 @@
 package kr.lul.grpc.sample.time.api;
 
 import com.google.protobuf.Timestamp;
-import io.grpc.ManagedChannel;
+import io.grpc.Server;
 import io.grpc.inprocess.InProcessChannelBuilder;
+import io.grpc.inprocess.InProcessServerBuilder;
+import io.grpc.testing.GrpcCleanupRule;
 import kr.lul.grpc.message.time.*;
-import kr.lul.grpc.sample.time.SampleTimeTestConfiguration;
 import kr.lul.grpc.sample.time.rpc.PingRequest;
 import kr.lul.grpc.sample.time.rpc.PingResponse;
 import kr.lul.grpc.sample.time.rpc.TemporalSampleServiceGrpc;
@@ -14,12 +15,9 @@ import kr.lul.grpc.util.time.TemporalMessageParser;
 import kr.lul.grpc.util.time.TemporalMessageParserImpl;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.slf4j.Logger;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.*;
 import java.util.concurrent.TimeUnit;
@@ -31,35 +29,41 @@ import static org.slf4j.LoggerFactory.getLogger;
  * @author justburrow
  * @since 2019-05-28
  */
-@RunWith(SpringRunner.class)
-@SpringBootTest(classes = SampleTimeTestConfiguration.class)
 public class TemporalSampleApiTest {
   private static final Logger log = getLogger(TemporalSampleApiTest.class);
 
-  @Value("${grpc.inProcessServerName}")
-  private String inProcessServerName;
-
-  private ManagedChannel channel;
-  private TemporalSampleServiceGrpc.TemporalSampleServiceBlockingStub stub;
+  @Rule
+  public GrpcCleanupRule grpcCleanupRule = new GrpcCleanupRule();
 
   private TemporalMessageBuilder builder = new TemporalMessageBuilderImpl();
   private TemporalMessageParser parser = new TemporalMessageParserImpl();
 
+  private String serverName;
+  private Server server;
+  private TemporalSampleServiceGrpc.TemporalSampleServiceBlockingStub stub;
+
   @Before
   public void setUp() throws Exception {
-    this.channel = InProcessChannelBuilder.forName(this.inProcessServerName)
-        .directExecutor()
-        .build();
-    log.info("SETUP - channel={}", this.channel);
+    TemporalSampleApi temporalSampleApi = new TemporalSampleApi();
+    temporalSampleApi.postConstruct();
 
-    this.stub = TemporalSampleServiceGrpc.newBlockingStub(this.channel);
+    this.serverName = InProcessServerBuilder.generateName();
+    this.server = InProcessServerBuilder.forName(this.serverName)
+        .directExecutor()
+        .addService(temporalSampleApi)
+        .build()
+        .start();
+    this.grpcCleanupRule.register(this.server);
+
+    this.stub = TemporalSampleServiceGrpc.newBlockingStub(
+        InProcessChannelBuilder.forName(this.serverName).directExecutor().build());
     log.info("SETUP - stub={}", this.stub);
   }
 
   @After
   public void tearDown() throws Exception {
-    this.channel.shutdown();
-    this.channel.awaitTermination(5L, TimeUnit.SECONDS);
+    this.server.shutdown();
+    this.server.awaitTermination(5L, TimeUnit.SECONDS);
   }
 
   @Test

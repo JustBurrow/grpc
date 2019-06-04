@@ -1,3 +1,0 @@
-grpc:
-  enabled: false
-  inProcessServerName: timeServiceApi

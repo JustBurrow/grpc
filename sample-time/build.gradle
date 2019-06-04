@@ -6,7 +6,7 @@ dependencies {
 
   implementation 'io.grpc:grpc-stub'
   implementation 'io.grpc:grpc-netty'
-  implementation 'io.github.lognet:grpc-spring-boot-starter'
+  implementation 'org.springframework.boot:spring-boot-starter-logging'
 
   if (JavaVersion.current().isJava9Compatible()) {
     compileOnly 'javax.annotation:javax.annotation-api'

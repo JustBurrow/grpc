@@ -1,6 +1,0 @@
-grpc:
-  port: 6565
-logging:
-  level:
-    root: warn
-    kr.lul.grpc.sample.time: trace
