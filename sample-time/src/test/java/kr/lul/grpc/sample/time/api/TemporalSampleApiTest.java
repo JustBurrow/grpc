@@ -55,7 +55,7 @@ public class TemporalSampleApiTest {
 
     STUB = TemporalSampleServiceGrpc.newBlockingStub(
         InProcessChannelBuilder.forName(serverName).directExecutor().build());
-    log.info("SETUP - STUB={}", STUB);
+    log.info("SETUP CLASS- STUB={}", STUB);
   }
 
   @AfterClass

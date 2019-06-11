@@ -3,6 +3,7 @@ package kr.lul.grpc.util.time;
 import com.google.protobuf.Duration;
 import com.google.protobuf.Message;
 import kr.lul.grpc.message.time.PeriodProto;
+import kr.lul.grpc.message.time.TemporalAmountProto;
 import kr.lul.grpc.util.common.MessageParser;
 
 import java.time.Period;
@@ -20,7 +21,8 @@ import static java.util.Collections.unmodifiableSet;
  */
 public interface TemporalAmountMessageParser extends MessageParser {
   Set<Class<? extends Message>> TEMPORAL_AMOUNT_MESSAGE_TYPES = unmodifiableSet(new HashSet<>(asList(
-      Duration.class, PeriodProto.Period.class)));
+      Duration.class, PeriodProto.Period.class,
+      TemporalAmountProto.TemporalAmount.class)));
 
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   // kr.lul.grpc.util.common.MessageParser
@@ -47,6 +49,18 @@ public interface TemporalAmountMessageParser extends MessageParser {
       amount = (T) Period.of(((PeriodProto.Period) message).getYears(),
           ((PeriodProto.Period) message).getMonths(),
           ((PeriodProto.Period) message).getDays());
+    } else if (message instanceof TemporalAmountProto.TemporalAmount) {
+      switch (((TemporalAmountProto.TemporalAmount) message).getAmountCase()) {
+        case PERIOD:
+          amount = parse(((TemporalAmountProto.TemporalAmount) message).getPeriod());
+          break;
+        case DURATION:
+          amount = parse(((TemporalAmountProto.TemporalAmount) message).getDuration());
+          break;
+        default:
+          throw new IllegalArgumentException(format("illegal message type : message.case=%s, message=%s",
+              ((TemporalAmountProto.TemporalAmount) message).getAmountCase(), message));
+      }
     } else {
       throw new IllegalStateException(format("illegal supports temporal amount message type configuration : %s",
           TEMPORAL_AMOUNT_MESSAGE_TYPES));

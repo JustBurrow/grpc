@@ -69,14 +69,20 @@ public class TemporalAmountSampleApi extends TemporalAmountSampleServiceGrpc.Tem
       log.trace("temporal1={}, temporal2={}", temporal1, temporal2);
     }
 
-    Duration duration = Duration.between(temporal1, temporal2);
+    Duration duration;
+    try {
+      duration = Duration.between(temporal1, temporal2);
+    } catch (Exception e) {
+      log.warn(e.getMessage(), e);
+      duration = null;
+    }
     Period period = Period.between(toLocalDate(temporal1), toLocalDate(temporal2));
     if (log.isTraceEnabled()) {
       log.trace("duration={}, period={}", duration, period);
     }
 
     TemporalAmountResponse.Builder responseBuilder = TemporalAmountResponse.newBuilder();
-    if (0 < period.getYears() || 0 < period.getMonths() || 0 < period.getDays()) {
+    if (null == duration || 0 < period.getYears() || 0 < period.getMonths() || 0 < period.getDays()) {
       responseBuilder.setTemporalAmount(TemporalAmountProto.TemporalAmount.newBuilder()
           .setPeriod((PeriodProto.Period) this.builder.build(period))
           .build());
