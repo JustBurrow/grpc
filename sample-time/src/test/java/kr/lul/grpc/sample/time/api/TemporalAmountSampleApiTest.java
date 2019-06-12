@@ -69,6 +69,17 @@ public class TemporalAmountSampleApiTest {
     SERVER.awaitTermination();
   }
 
+  private void assertResponse(TemporalAmountResponse response, TemporalAmount... expected) {
+    log.debug("THEN : response={}, expected={}", response, expected);
+
+    assertThat(response)
+        .isNotNull()
+        .extracting(TemporalAmountResponse::hasTemporalAmount)
+        .isEqualTo(true);
+    assertThat((TemporalAmount) this.parser.parse(response.getTemporalAmount()))
+        .isIn(expected);
+  }
+
   @Test
   public void test_calc_with_Instant_and_Instant() throws Exception {
     // Given
@@ -91,17 +102,9 @@ public class TemporalAmountSampleApiTest {
     log.info("WHEN - response={}", response);
 
     // Then
-    final Period period = Period.between(ZonedDateTime.ofInstant(t1, ZoneId.systemDefault()).toLocalDate(),
-        ZonedDateTime.ofInstant(t2, ZoneId.systemDefault()).toLocalDate());
-    final Duration duration = Duration.between(t1, t2);
-    log.info("EXPECTED - period={}, duration={}", period, duration);
-
-    assertThat(response)
-        .isNotNull()
-        .extracting(TemporalAmountResponse::hasTemporalAmount)
-        .isEqualTo(true);
-    assertThat((TemporalAmount) this.parser.parse(response.getTemporalAmount()))
-        .isIn(period, duration);
+    assertResponse(response, Period.between(ZonedDateTime.ofInstant(t1, ZoneId.systemDefault()).toLocalDate(),
+        ZonedDateTime.ofInstant(t2, ZoneId.systemDefault()).toLocalDate()),
+        Duration.between(t1, t2));
   }
 
   @Test
@@ -126,16 +129,8 @@ public class TemporalAmountSampleApiTest {
     log.info("WHEN - response={}", response);
 
     // Then
-    final Period period = Period.between(t1.toLocalDate(), t2.toLocalDate());
-    final Duration duration = Duration.between(t1, t2);
-    log.info("EXPECTED - period={}, duration={}", period, duration);
-
-    assertThat(response)
-        .isNotNull()
-        .extracting(TemporalAmountResponse::hasTemporalAmount)
-        .isEqualTo(true);
-    assertThat((TemporalAmount) this.parser.parse(response.getTemporalAmount()))
-        .isIn(period, duration);
+    assertResponse(response, Period.between(t1.toLocalDate(), t2.toLocalDate()),
+        Duration.between(t1, t2));
   }
 
   @Test
@@ -161,16 +156,9 @@ public class TemporalAmountSampleApiTest {
     log.info("WHEN - response={}", response);
 
     // Then
-    final Period period = Period.between(t1.toLocalDate(), t2.toLocalDate());
-    final Duration duration = Duration.between(t1, t2);
-    log.info("EXPECTED - period={}, duration={}", period, duration);
-
-    assertThat(response)
-        .isNotNull()
-        .extracting(TemporalAmountResponse::hasTemporalAmount)
-        .isEqualTo(true);
-    assertThat((TemporalAmount) this.parser.parse(response.getTemporalAmount()))
-        .isIn(period, duration);
+    assertResponse(response,
+        Period.between(t1.toLocalDate(), t2.toLocalDate()),
+        Duration.between(t1, t2));
   }
 
   @Test
@@ -195,15 +183,8 @@ public class TemporalAmountSampleApiTest {
     log.info("WHEN - response={}", response);
 
     // Then
-    final Duration duration = Duration.between(t1, t2);
-    log.info("EXPECTED - duration={}", duration);
-
-    assertThat(response)
-        .isNotNull()
-        .extracting(TemporalAmountResponse::hasTemporalAmount)
-        .isEqualTo(true);
-    assertThat((TemporalAmount) this.parser.parse(response.getTemporalAmount()))
-        .isEqualTo(duration);
+    assertResponse(response,
+        Duration.between(t1, t2));
   }
 
   @Test
@@ -230,15 +211,7 @@ public class TemporalAmountSampleApiTest {
     log.info("WHEN - response={}", response);
 
     // Then
-    final Period period = Period.between(t1, t2);
-    log.info("EXPECTED - period={}", period);
-
-    assertThat(response)
-        .isNotNull()
-        .extracting(TemporalAmountResponse::hasTemporalAmount)
-        .isEqualTo(true);
-    assertThat((TemporalAmount) this.parser.parse(response.getTemporalAmount()))
-        .isEqualTo(period);
+    assertResponse(response, Period.between(t1, t2));
   }
 
   @Test
@@ -263,15 +236,9 @@ public class TemporalAmountSampleApiTest {
     log.info("WHEN - response={}", response);
 
     // Then
-    Duration duration = Duration.between(t1, t2);
-    Period period = Period.between(t1.toLocalDate(), t2.toLocalDate());
-    log.info("EXPECTED - duration={}, period={}", duration, period);
-
-    assertThat(response)
-        .extracting(TemporalAmountResponse::hasTemporalAmount)
-        .isEqualTo(true);
-    assertThat((TemporalAmount) this.parser.parse(response.getTemporalAmount()))
-        .isIn(duration, period);
+    assertResponse(response,
+        Duration.between(t1, t2),
+        Period.between(t1.toLocalDate(), t2.toLocalDate()));
   }
 
   @Test
@@ -296,13 +263,6 @@ public class TemporalAmountSampleApiTest {
     log.info("WHEN - response={}", response);
 
     // Then
-    Duration duration = Duration.between(t1, t2);
-    log.info("EXPECTED - duration={}", duration);
-
-    assertThat(response)
-        .extracting(TemporalAmountResponse::hasTemporalAmount)
-        .isEqualTo(true);
-    assertThat((TemporalAmount) this.parser.parse(response.getTemporalAmount()))
-        .isEqualTo(duration);
+    assertResponse(response, Duration.between(t1, t2));
   }
 }
