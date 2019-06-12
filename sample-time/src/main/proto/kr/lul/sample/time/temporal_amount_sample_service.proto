@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+option java_package = "kr.lul.grpc.sample.time.rpc";
+option java_outer_classname = "TemporalAmountSampleServiceProto";
+option java_multiple_files = true;
+
+package kr.lul.message.time;
+
+import "kr/lul/message/time/temporal.proto";
+import "kr/lul/message/time/temporal_amount.proto";
+
+message TemporalPairRequest {
+    Temporal temporal1 = 1;
+    Temporal temporal2 = 2;
+}
+
+message TemporalAmountResponse {
+    TemporalAmount temporal_amount = 1;
+}
+
+service TemporalAmountSampleService {
+    rpc calc (TemporalPairRequest) returns (TemporalAmountResponse);
+}

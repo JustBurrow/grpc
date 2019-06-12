@@ -1,0 +1,61 @@
+apply plugin: 'com.google.protobuf'
+
+dependencies {
+  protobuf project(':message-time')
+  implementation project(':util-time')
+
+  implementation 'io.grpc:grpc-stub'
+  implementation 'io.grpc:grpc-netty'
+  implementation 'org.springframework.boot:spring-boot-starter-logging'
+
+  if (JavaVersion.current().isJava9Compatible()) {
+    compileOnly 'javax.annotation:javax.annotation-api'
+  }
+
+  testImplementation 'io.grpc:grpc-testing'
+}
+
+sourceSets {
+  main {
+    proto {
+      srcDir 'src/main/proto'
+    }
+
+    java {
+      srcDir "${protobuf.generatedFilesBaseDir}/main/grpc"
+      srcDir "${protobuf.generatedFilesBaseDir}/main/java"
+    }
+  }
+
+  test {
+    proto {
+      srcDir 'src/test/proto'
+    }
+  }
+}
+
+protobuf {
+  protoc {
+    artifact = "com.google.protobuf:protoc"
+  }
+
+  plugins {
+    grpc { artifact = "io.grpc:protoc-gen-grpc-java" }
+  }
+
+  clean {
+    delete generatedFilesBaseDir
+  }
+
+  generateProtoTasks {
+    all()*.plugins {
+      grpc {}
+    }
+  }
+}
+
+idea {
+  module {
+    sourceDirs += file("${projectDir}/src/main/proto")
+  }
+}

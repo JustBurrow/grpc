@@ -1,0 +1,8 @@
+rootProject.name = 'grpc'
+
+include 'message-time'
+
+include 'util-common',
+    'util-time'
+
+include 'sample-time'

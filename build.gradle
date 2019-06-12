@@ -1,11 +1,64 @@
 buildscript {
   repositories {
     mavenCentral()
+    jcenter()
   }
+
   dependencies {
+    classpath 'org.springframework.boot:spring-boot-gradle-plugin:2.1.5.RELEASE'
+    classpath 'io.spring.gradle:dependency-management-plugin:1.0.6.RELEASE'
     classpath 'com.google.protobuf:protobuf-gradle-plugin:0.8.8'
   }
 }
 
-apply plugin: 'idea'
-apply plugin: 'eclipse'
+allprojects {
+  apply plugin: 'idea'
+  apply plugin: 'eclipse'
+
+  group 'kr.lul.grpc'
+  version '0.0.1.SNAPSHOT'
+}
+
+subprojects {
+  apply plugin: 'java'
+  apply plugin: 'java-library'
+  apply plugin: 'org.springframework.boot'
+  apply plugin: 'io.spring.dependency-management'
+
+  sourceCompatibility = 1.8
+  targetCompatibility = 1.8
+
+  def grpcVersion = '1.21.0'
+  def protobufVersion = '3.7.1'
+
+  repositories {
+    mavenCentral()
+    jcenter()
+  }
+
+  dependencyManagement {
+    imports {
+      mavenBom org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES
+    }
+
+    dependencies {
+      dependency "com.google.protobuf:protobuf-java-util:${protobufVersion}"
+      dependency "com.google.protobuf:protoc:${protobufVersion}"
+      dependency 'io.github.lognet:grpc-spring-boot-starter:3.2.2'
+      dependency "io.grpc:grpc-all:${grpcVersion}"
+      dependency "io.grpc:grpc-netty:${grpcVersion}"
+      dependency "io.grpc:grpc-protobuf:${grpcVersion}"
+      dependency "io.grpc:grpc-stub:${grpcVersion}"
+      dependency "io.grpc:grpc-testing:${grpcVersion}"
+      dependency "io.grpc:protoc-gen-grpc-java:${grpcVersion}"
+      dependency 'javax.annotation:javax.annotation-api:1.3.2'
+    }
+  }
+
+  dependencies {
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+  }
+
+  bootJar.enabled = false
+  jar.enabled = true
+}

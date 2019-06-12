@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+option java_package = "kr.lul.grpc.message.time";
+option java_outer_classname = "LocalDateProto";
+
+package kr.lul.message.time;
+
+message LocalDate {
+    int32 year = 1;
+    /*
+     * Month of year, from 1 to 12.
+     */
+    int32 month = 2;
+    /*
+     * Date of month, from 1 to 31.
+     */
+    int32 date = 3;
+}

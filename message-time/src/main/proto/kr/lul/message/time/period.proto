@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+option java_package = "kr.lul.grpc.message.time";
+option java_outer_classname = "PeriodProto";
+
+package kr.lul.message.time;
+
+message Period {
+    int32 years = 1;
+    int32 months = 2;
+    int32 days = 3;
+}

@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+option java_package = "kr.lul.grpc.message.time";
+option java_outer_classname = "TemporalAmountProto";
+
+package kr.lul.message.time;
+
+import "kr/lul/message/time/period.proto";
+
+import "google/protobuf/duration.proto";
+
+message TemporalAmount {
+    oneof amount {
+        google.protobuf.Duration duration = 1;
+        Period period = 2;
+    }
+}
